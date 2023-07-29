@@ -7,17 +7,19 @@ PlanetsStats planetsStats = new PlanetsStats(
 		new PlanetValidator()
 	),
 	new Printer(),
-	new StatsHandler()
+	new ConsoleUserInteraction(
+		new StatsHandler()
+	)
 );
 
 try
 {
 	await planetsStats.Start();
 }
-catch (Exception exception)
+catch (Exception ex)
 {
+	Console.WriteLine(ex.Message);
 	Console.WriteLine("An unexpected error has occurred. Please, press any key to close");
 }
 
 Console.ReadKey();
-

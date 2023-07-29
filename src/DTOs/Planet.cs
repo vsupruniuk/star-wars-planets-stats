@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace star_wars_planet_stats.PlanetsDataStructs;
+namespace star_wars_planet_stats.DTOs;
 
-public record Planet(
+public record PlanetDTO(
 	[property: JsonPropertyName("name")] string Name,
 	[property: JsonPropertyName("rotation_period")]
 	string RotationPeriod,

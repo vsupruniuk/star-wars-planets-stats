@@ -1,6 +1,7 @@
 using System.Text.Json;
+using star_wars_planet_stats.DTOs;
 using star_wars_planet_stats.Interfaces;
-using star_wars_planet_stats.PlanetsDataStructs;
+using star_wars_planet_stats.Types;
 
 namespace star_wars_planet_stats.Repositories;
 
@@ -18,17 +19,24 @@ public class PlanetsRepository : IPlanetsRepository
 		_planetValidator = planetValidator;
 	}
 
-	public async Task<IReadOnlyList<ValidatedPlanet>?> GetStats()
+	public async Task<IReadOnlyList<Planet>?> GetStats()
 	{
 		_client.BaseAddress = new Uri(BaseAddress);
 
-		HttpResponseMessage response = await _client.GetAsync(UriAddress);
+		try
+		{
+			HttpResponseMessage response = await _client.GetAsync(UriAddress);
 
-		// TODO handle HttpRequestException 
-		response.EnsureSuccessStatusCode();
+			response.EnsureSuccessStatusCode();
 
-		string jsonData = await response.Content.ReadAsStringAsync();
+			string jsonData = await response.Content.ReadAsStringAsync();
 
-		return _planetValidator.ValidatedPlanets(JsonSerializer.Deserialize<StatsResult>(jsonData)!);
+			return _planetValidator.ValidatedPlanets(JsonSerializer.Deserialize<StatsResultDTO>(jsonData)!);
+		}
+		catch (HttpRequestException ex)
+		{
+			Console.WriteLine(ex.Message);
+			return null;
+		}
 	}
 }

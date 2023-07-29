@@ -1,11 +1,12 @@
+using star_wars_planet_stats.DTOs;
 using star_wars_planet_stats.Interfaces;
-using star_wars_planet_stats.PlanetsDataStructs;
+using star_wars_planet_stats.Types;
 
 namespace star_wars_planet_stats.Classes;
 
 public class PlanetValidator : IPlanetValidator
 {
-	public IReadOnlyList<ValidatedPlanet>? ValidatedPlanets(StatsResult? statsResult)
+	public IReadOnlyList<Planet>? ValidatedPlanets(StatsResultDTO? statsResult)
 	{
 		if (statsResult is null)
 		{
@@ -13,15 +14,15 @@ public class PlanetValidator : IPlanetValidator
 		}
 		else
 		{
-			List<ValidatedPlanet> validatedPlanets = new List<ValidatedPlanet>();
+			List<Planet> validatedPlanets = new List<Planet>();
 
-			foreach (Planet planet in statsResult.Results)
+			foreach (PlanetDTO planet in statsResult.Results)
 			{
-				validatedPlanets.Add(new ValidatedPlanet(
-					Name: planet.Name,
-					Diameter: int.Parse(planet.Diameter),
-					SurfaceWater: planet.SurfaceWater != "unknown" ? int.Parse(planet.SurfaceWater) : null,
-					Population: planet.Population != "unknown" ? long.Parse(planet.Population) : null
+				validatedPlanets.Add(new Planet(
+					planet.Name,
+					int.Parse(planet.Diameter),
+					int.TryParse(planet.SurfaceWater, out int parsedInt) ? parsedInt : null,
+					long.TryParse(planet.Population, out long parsedLong) ? parsedLong : null
 				));
 			}
 

@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 
-namespace star_wars_planet_stats.PlanetsDataStructs;
+namespace star_wars_planet_stats.DTOs;
 
-public record StatsResult(
+public record StatsResultDTO(
 	[property: JsonPropertyName("count")] int Count,
 	[property: JsonPropertyName("next")] string Next,
 	[property: JsonPropertyName("previous")]
 	object? Previous,
 	[property: JsonPropertyName("results")]
-	IReadOnlyList<Planet> Results
+	IReadOnlyList<PlanetDTO> Results
 );

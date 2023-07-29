@@ -1,5 +1,5 @@
 using star_wars_planet_stats.Interfaces;
-using star_wars_planet_stats.PlanetsDataStructs;
+using star_wars_planet_stats.Types;
 
 namespace star_wars_planet_stats.Classes;
 
@@ -7,18 +7,18 @@ public class PlanetsStats : IPlanetsStats
 {
 	private readonly IPlanetsRepository _planetsRepository;
 	private readonly IPrinter _printer;
-	private readonly IStatsHandler _statsHandler;
+	private readonly IUserInteraction _userInteraction;
 
-	public PlanetsStats(IPlanetsRepository planetsRepository, IPrinter printer, IStatsHandler statsHandler)
+	public PlanetsStats(IPlanetsRepository planetsRepository, IPrinter printer, IUserInteraction userInteraction)
 	{
 		_planetsRepository = planetsRepository;
 		_printer = printer;
-		_statsHandler = statsHandler;
+		_userInteraction = userInteraction;
 	}
 
 	public async Task Start()
 	{
-		IReadOnlyList<ValidatedPlanet>? planets = await _planetsRepository.GetStats();
+		IReadOnlyList<Planet>? planets = await _planetsRepository.GetStats();
 		
 		if (planets is null)
 		{
@@ -27,7 +27,7 @@ public class PlanetsStats : IPlanetsStats
 		else
 		{
 			_printer.PrintPlanetsStats(planets);
-			_statsHandler.HandleUserInput(planets);
+			_userInteraction.HandleUserInput(planets);
 		}
 		
 		Close();
